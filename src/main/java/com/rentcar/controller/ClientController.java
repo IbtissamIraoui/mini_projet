@@ -57,15 +57,5 @@ public class ClientController {
         return "redirect:/clients";
     }
 
-    @GetMapping("/{id}/historique")
-    public String historique(@PathVariable("id") Long id, Model model) {
-        Client client = clientService.getClientById(id);
-        if (client == null) {
-            return "redirect:/clients";
-        }
-        model.addAttribute("client", client);
-        model.addAttribute("locations", clientService.getHistoriqueLocations(id));
-        model.addAttribute("totalDepense", clientService.getTotalDepense(id));
-        return "clients/historique";
-    }
+
 }
