@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Formulaire Location</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0" th:text="${location.id == null ? 'Nouvelle Location' : 'Modifier la Location'}">Formulaire</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/locations/add}" th:object="${location}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Client</label>
+                            <select class="form-select" th:field="*{client}" required>
+                                <option value="">-- Sélectionner un client --</option>
+                                <option th:each="client : ${clients}" th:value="${client.id}" th:text="${client.nom + ' (CIN: ' + client.cin + ')'}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Voiture</label>
+                            <select class="form-select" th:field="*{voiture}" required>
+                                <option value="">-- Sélectionner une voiture --</option>
+                                <option th:each="voiture : ${voitures}" th:value="${voiture.id}" th:text="${voiture.marque + ' - ' + voiture.immatriculation + ' (' + voiture.prixJour + '€/j)'}"></option>
+                            </select>
+                            <div class="form-text text-muted" th:if="${#lists.isEmpty(voitures) && location.id == null}">
+                                <i class="fas fa-exclamation-triangle text-warning"></i> Aucune voiture disponible actuellement.
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date de Début</label>
+                                <input type="date" class="form-control" th:field="*{dateDebut}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date de Fin</label>
+                                <input type="date" class="form-control" th:field="*{dateFin}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3" th:if="${location.id != null}">
+                            <label class="form-label">Statut</label>
+                            <select class="form-select" th:field="*{statut}">
+                                <option th:each="statut : ${T(com.rentcar.model.Location.StatutLocation).values()}" 
+                                        th:value="${statut}" th:text="${statut}"></option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="/locations" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-warning">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

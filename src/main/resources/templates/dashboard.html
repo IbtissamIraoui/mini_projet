@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Tableau de bord</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <!-- Alerte retards -->
+    <div th:if="${nbRetards > 0}" class="alert alert-danger d-flex align-items-start gap-3 mb-4" role="alert">
+        <i class="fas fa-exclamation-triangle fa-lg mt-1"></i>
+        <div>
+            <strong th:text="${nbRetards} + ' location(s) en retard de restitution !'"></strong>
+            <ul class="mb-0 mt-1">
+                <li th:each="loc : ${locationsEnRetardDetails}">
+                    <span th:text="${loc.client.nom}"></span> —
+                    <span th:text="${loc.voiture.marque + ' ' + loc.voiture.immatriculation}"></span>
+                    (prévu le <span th:text="${#temporals.format(loc.dateFin, 'dd/MM/yyyy')}"></span>)
+                    <a th:href="@{/locations/edit/{id}(id=${loc.id})}" class="ms-2 badge bg-danger text-white">Traiter</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Alerte échéances aujourd'hui -->
+    <div th:if="${nbExpirentAujourdhui > 0}" class="alert alert-warning d-flex align-items-center gap-3 mb-4" role="alert">
+        <i class="fas fa-clock fa-lg"></i>
+        <span>
+            <strong th:text="${nbExpirentAujourdhui} + ' location(s) arrivent à échéance aujourd\'hui.'"></strong>
+            <a href="/locations?statut=EN_COURS" class="ms-2 btn btn-sm btn-outline-warning">Voir</a>
+        </span>
+    </div>
+
+    <!-- Titre -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-tachometer-alt text-primary"></i> Tableau de bord</h2>
+            <p class="text-muted">Aperçu général de l'activité de location.</p>
+        </div>
+    </div>
+
+    <!-- Cartes statistiques -->
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-uppercase text-white-50">Voitures</h6>
+                            <h2 class="mb-0" th:text="${totalVoitures}">0</h2>
+                        </div>
+                        <i class="fas fa-car fa-3x text-white-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/voitures">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-uppercase text-white-50">Clients</h6>
+                            <h2 class="mb-0" th:text="${totalClients}">0</h2>
+                        </div>
+                        <i class="fas fa-users fa-3x text-white-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/clients">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-uppercase text-white-50">Locations en cours</h6>
+                            <h2 class="mb-0" th:text="${locationsActives}">0</h2>
+                        </div>
+                        <i class="fas fa-file-signature fa-3x text-white-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/locations">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-uppercase text-white-50">Revenu Total</h6>
+                            <h2 class="mb-0" th:text="${revenuTotal} + ' MAD'">0 MAD</h2>
+                        </div>
+                        <i class="fas fa-money-bill fa-3x text-white-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/locations">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taux d'occupation + Revenus par marque -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-pie text-primary"></i> Taux d'occupation du parc</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <h2 th:text="${#numbers.formatDecimal(tauxOccupation, 1, 1)} + '%'">0%</h2>
+                    <div class="progress w-100 mt-3" style="height: 25px;">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             th:style="'width: ' + ${tauxOccupation} + '%'"
+                             th:aria-valuenow="${tauxOccupation}"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-bar text-success"></i> Revenus par Modèle et par Mois</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Marque</th>
+                            <th>Mois</th>
+                            <th>Revenu Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${revenusParMarqueEtMois}">
+                            <td th:text="${row[0]}"></td>
+                            <td th:text="${row[1]}"></td>
+                            <td th:text="${row[2]} + ' MAD'" class="fw-bold text-success"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(revenusParMarqueEtMois)}">
+                            <td colspan="3" class="text-center text-muted">Aucune donnée disponible</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

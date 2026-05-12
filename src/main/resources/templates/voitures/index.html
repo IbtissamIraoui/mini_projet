@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Gestion des Voitures</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-car-side"></i> Liste des Voitures</h2>
+        <a href="/voitures/add" class="btn btn-primary"><i class="fas fa-plus"></i> Nouvelle Voiture</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="/voitures" method="get" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="segment" class="col-form-label">Filtrer les voitures disponibles par segment :</label>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="segment" name="segment">
+                        <option value="">Tous les véhicules</option>
+                        <option value="Citadine" th:selected="${segment == 'Citadine'}">Citadine</option>
+                        <option value="Berline" th:selected="${segment == 'Berline'}">Berline</option>
+                        <option value="SUV" th:selected="${segment == 'SUV'}">SUV</option>
+                        <option value="Utilitaire" th:selected="${segment == 'Utilitaire'}">Utilitaire</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="/voitures" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead class="table-light">
+                <tr>
+                    <th>Immatriculation</th>
+                    <th>Marque</th>
+                    <th>Segment</th>
+                    <th>Prix / Jour</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="voiture : ${voitures}">
+                    <td th:text="${voiture.immatriculation}"></td>
+                    <td th:text="${voiture.marque}"></td>
+                    <td th:text="${voiture.segment}"></td>
+                    <td th:text="${voiture.prixJour} + ' €'"></td>
+                    <td>
+                        <span th:if="${voiture.disponible}" class="badge bg-success">Disponible</span>
+                        <span th:unless="${voiture.disponible}" class="badge bg-danger">En location</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/voitures/edit/{id}(id=${voiture.id})}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                        <a th:href="@{/voitures/delete/{id}(id=${voiture.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette voiture ?');"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(voitures)}">
+                    <td colspan="6" class="text-center text-muted">Aucune voiture trouvée</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

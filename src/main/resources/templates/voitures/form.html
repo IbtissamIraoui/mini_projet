@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Formulaire Voiture</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0" th:text="${voiture.id == null ? 'Ajouter une Voiture' : 'Modifier la Voiture'}">Formulaire</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/voitures/add}" th:object="${voiture}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Immatriculation</label>
+                            <input type="text" class="form-control" th:field="*{immatriculation}" th:classappend="${#fields.hasErrors('immatriculation')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('immatriculation')}" th:errors="*{immatriculation}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Marque</label>
+                            <input type="text" class="form-control" th:field="*{marque}" th:classappend="${#fields.hasErrors('marque')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('marque')}" th:errors="*{marque}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Segment (Ex: SUV, Berline)</label>
+                            <input type="text" class="form-control" th:field="*{segment}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Prix par Jour (€)</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{prixJour}" th:classappend="${#fields.hasErrors('prixJour')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('prixJour')}" th:errors="*{prixJour}"></div>
+                        </div>
+                        
+                        <div class="mb-3 form-check" th:if="${voiture.id != null}">
+                            <input type="checkbox" class="form-check-input" th:field="*{disponible}">
+                            <label class="form-check-label">Disponible</label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="/voitures" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

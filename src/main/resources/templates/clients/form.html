@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Formulaire Client</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0" th:text="${client.id == null ? 'Ajouter un Client' : 'Modifier le Client'}">Formulaire</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/clients/add}" th:object="${client}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nom Complet</label>
+                            <input type="text" class="form-control" th:field="*{nom}" th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">CIN</label>
+                            <input type="text" class="form-control" th:field="*{cin}" th:classappend="${#fields.hasErrors('cin')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('cin')}" th:errors="*{cin}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Téléphone</label>
+                            <input type="text" class="form-control" th:field="*{telephone}">
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="/clients" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-success">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
