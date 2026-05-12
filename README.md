@@ -57,6 +57,35 @@ L'application sera accessible sur : **http://localhost:8080**
 
 ---
 
+## 📸 Screenshots
+
+> 💡 *Remplace les liens ci-dessous par tes vraies captures d'écran (voir instructions en bas)*
+
+### 🏠 Page d'accueil
+![Page d'accueil](screenshots/home.png)
+
+### 🚘 Liste des voitures
+![Liste des voitures](screenshots/cars-list.png)
+
+### ➕ Ajouter une voiture
+![Ajouter une voiture](screenshots/add-car.png)
+
+### 👤 Gestion des clients
+![Gestion des clients](screenshots/clients.png)
+
+### 📅 Réservations
+![Réservations](screenshots/reservations.png)
+
+---
+
+> **Comment ajouter tes screenshots :**
+> 1. Crée un dossier `screenshots/` à la racine du projet
+> 2. Fais des captures de ton application lancée sur `localhost:8080`
+> 3. Enregistre-les avec les noms indiqués ci-dessus (`home.png`, `cars-list.png`, etc.)
+> 4. `git add screenshots/` → `git commit -m "Add screenshots"` → `git push`
+
+---
+
 ## 👥 Équipe
 
 | Membre | Rôle |
